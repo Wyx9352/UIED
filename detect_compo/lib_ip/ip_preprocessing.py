@@ -41,6 +41,11 @@ def gray_to_gradient(img):
     dst1 = abs(cv2.filter2D(img_f, -1, kernel_h))
     dst2 = abs(cv2.filter2D(img_f, -1, kernel_v))
     gradient = (dst1 + dst2).astype('uint8')
+    #kernel_lijue = np.array([[-1,0,1],[-2,0,2],[-1,0,1]])
+    #gradient_lijue = (abs(cv2.filter2D(img_f, -1, kernel_lijue))).astype('uint8')
+
+    #print((gradient_lijue==gradient).all())
+    #print(gradient)
     return gradient
 
 
@@ -60,6 +65,33 @@ def binarization(org, grad_min, show=False, write_path=None, wait_key=0):
     grad = gray_to_gradient(grey)        # get RoI with high gradient
     rec, binary = cv2.threshold(grad, grad_min, 255, cv2.THRESH_BINARY)    # enhance the RoI
     morph = cv2.morphologyEx(binary, cv2.MORPH_CLOSE, (3, 3))  # remove noises
+    #morph = cv2.morphologyEx(binary, cv2.MORPH_CLOSE, (3, 3))  # remove noises
+
+    #kernel = np.ones((3, 3), np.uint8)
+    kernel = np.array([[0,0,0],[1,1,1],[0,0,0]])
+    kernel = kernel.astype('uint8')
+    morph = cv2.dilate(morph,kernel,iterations=3) #膨胀 
+
+    kernel = np.array([[0,1,0],[0,1,0],[0,1,0]])
+    kernel = kernel.astype('uint8')
+    morph = cv2.dilate(morph,kernel,iterations=3) #膨胀
+
+    morph = cv2.erode(morph,kernel,iterations=1)  #腐蚀
+    if write_path is not None:
+        cv2.imwrite(write_path, morph)
+    if show:
+        cv2.imshow('binary', morph)
+        if wait_key is not None:
+            cv2.waitKey(wait_key)
+    return morph
+
+def nest_binarization(org, grad_min, show=False, write_path=None, wait_key=0):
+    grey = cv2.cvtColor(org, cv2.COLOR_BGR2GRAY)
+    grad = gray_to_gradient(grey)        # get RoI with high gradient
+    rec, binary = cv2.threshold(grad, grad_min, 255, cv2.THRESH_BINARY)    # enhance the RoI
+    morph = cv2.morphologyEx(binary, cv2.MORPH_CLOSE, (3, 3))  # remove noises
+    #morph = binary
+
     if write_path is not None:
         cv2.imwrite(write_path, morph)
     if show:

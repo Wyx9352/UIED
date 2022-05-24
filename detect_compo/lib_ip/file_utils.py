@@ -68,5 +68,5 @@ def save_clipping(org, output_root, corners, compo_classes, compo_index):
 
 def build_directory(directory):
     if not os.path.exists(directory):
-        os.mkdir(directory)
+        os.makedirs(directory)
     return directory

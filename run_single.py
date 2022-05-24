@@ -51,16 +51,16 @@ if __name__ == '__main__':
                   'merge-contained-ele':True, 'merge-line-to-paragraph':False, 'remove-bar':True}
 
     # set input image path
-    input_path_img = 'data/input/497.jpg'
-    output_root = 'data/output'
+    input_path_img = '/home/auto-test-4/wyx/UIED/data/input/screenshots/IMG_0108.PNG'
+    output_root = 'data/output/screenshots'
 
     resized_height = resize_height_by_longest_edge(input_path_img, resize_length=800)
     color_tips()
 
     is_ip = True
-    is_clf = False
-    is_ocr = True
-    is_merge = True
+    is_clf = True
+    is_ocr = False
+    is_merge = False
 
     if is_ocr:
         import detect_text.text_detection as text

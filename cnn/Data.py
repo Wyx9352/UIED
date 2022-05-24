@@ -46,7 +46,7 @@ class Data:
     def generate_training_data(self, train_data_ratio=0.8):
         # transfer int into c dimensions one-hot array
         def expand(label, class_number):
-            # return y : (num_class, num_samples)
+            # return y : (num_class, num_samples)#类别数，样本数
             y = np.eye(class_number)[label]
             y = np.squeeze(y)
             return y

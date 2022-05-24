@@ -1,5 +1,5 @@
 import keras
-from keras.applications.resnet50 import ResNet50
+from tensorflow.keras.applications.resnet50 import ResNet50
 from keras.models import Model,load_model
 from keras.layers import Dense, Activation, Flatten, Dropout
 from sklearn.metrics import confusion_matrix
@@ -46,6 +46,7 @@ class CNN:
     def train(self, data, epoch_num=30):
         self.data = data
         self.build_model(epoch_num)
+        self.model_path = 'Model/wyx/rico/cnn-rico-ele14-1.h5'
         self.model.save(self.model_path)
         print("Trained model is saved to", self.model_path)
 
@@ -89,6 +90,7 @@ class CNN:
             X = self.preprocess_img(imgs[i])
             Y = self.class_map[np.argmax(self.model.predict(X))]
             compos[i].category = Y
+            print(Y)
             if show:
                 print(Y)
                 cv2.imshow('element', imgs[i])
