@@ -83,6 +83,7 @@ def binarization(org, grad_min, show=False, write_path=None, wait_key=0):
         cv2.imshow('binary', morph)
         if wait_key is not None:
             cv2.waitKey(wait_key)
+            #xxx
     return morph
 
 def nest_binarization(org, grad_min, show=False, write_path=None, wait_key=0):
