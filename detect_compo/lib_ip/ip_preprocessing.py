@@ -91,6 +91,7 @@ def nest_binarization(org, grad_min, show=False, write_path=None, wait_key=0):
     rec, binary = cv2.threshold(grad, grad_min, 255, cv2.THRESH_BINARY)    # enhance the RoI
     morph = cv2.morphologyEx(binary, cv2.MORPH_CLOSE, (3, 3))  # remove noises
     #morph = binary
+    #xxx
 
     kernel = np.array([[0,0,0],[1,1,1],[0,0,0]])
     kernel = kernel.astype('uint8')
