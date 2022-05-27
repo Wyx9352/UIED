@@ -28,23 +28,23 @@ def compos_update(compos, org_shape):
 class Component:
     def __init__(self, region, image_shape):
         self.id = None
-        self.region = region
+        self.region = region #point: (row_index, column_index) 像素点
         self.boundary = self.compo_get_boundary()
         self.bbox = self.compo_get_bbox()
         self.bbox_area = self.bbox.box_area
 
-        self.region_area = len(region)
+        self.region_area = len(region) #像素个数
         self.width = len(self.boundary[0])
         self.height = len(self.boundary[2])
         self.image_shape = image_shape
-        self.area = self.width * self.height
+        self.area = self.width * self.height #实际面积
 
         self.category = 'Compo'
         self.contain = []
 
         self.rect_ = None
         self.line_ = None
-        self.redundant = False
+        self.redundant = False #多余的
 
     def compo_update(self, id, org_shape):
         self.id = id

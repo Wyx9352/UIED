@@ -70,11 +70,11 @@ def binarization(org, grad_min, show=False, write_path=None, wait_key=0):
     #kernel = np.ones((3, 3), np.uint8)
     kernel = np.array([[0,0,0],[1,1,1],[0,0,0]])
     kernel = kernel.astype('uint8')
-    morph = cv2.dilate(morph,kernel,iterations=3) #膨胀 
+    morph = cv2.dilate(morph,kernel,iterations=3) #横向膨胀 
 
     kernel = np.array([[0,1,0],[0,1,0],[0,1,0]])
     kernel = kernel.astype('uint8')
-    morph = cv2.dilate(morph,kernel,iterations=3) #膨胀
+    morph = cv2.dilate(morph,kernel,iterations=3) #纵向膨胀
 
     morph = cv2.erode(morph,kernel,iterations=1)  #腐蚀
     if write_path is not None:
@@ -83,7 +83,6 @@ def binarization(org, grad_min, show=False, write_path=None, wait_key=0):
         cv2.imshow('binary', morph)
         if wait_key is not None:
             cv2.waitKey(wait_key)
-            #xxx
     return morph
 
 def nest_binarization(org, grad_min, show=False, write_path=None, wait_key=0):
@@ -92,6 +91,10 @@ def nest_binarization(org, grad_min, show=False, write_path=None, wait_key=0):
     rec, binary = cv2.threshold(grad, grad_min, 255, cv2.THRESH_BINARY)    # enhance the RoI
     morph = cv2.morphologyEx(binary, cv2.MORPH_CLOSE, (3, 3))  # remove noises
     #morph = binary
+
+    kernel = np.array([[0,0,0],[1,1,1],[0,0,0]])
+    kernel = kernel.astype('uint8')
+    morph = cv2.dilate(morph,kernel,iterations=1) #横向膨胀 
 
     if write_path is not None:
         cv2.imwrite(write_path, morph)

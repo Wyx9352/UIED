@@ -430,7 +430,7 @@ def component_detection(binary, min_obj_area,
                 # region = util.boundary_bfs_connected_area(binary, i, j, mask)
 
                 mask_copy = mask.copy()
-                ff = cv2.floodFill(binary, mask, (j, i), None, 0, 0, cv2.FLOODFILL_MASK_ONLY)
+                ff = cv2.floodFill(binary, mask, (j, i), None, 0, 0, flags=8 | cv2.FLOODFILL_MASK_ONLY)
                 #ff:->[retval, image, mask, rect]
                 #import pdb
                 #pdb.set_trace()
@@ -477,7 +477,7 @@ def component_detection(binary, min_obj_area,
 
 def nested_components_detection(grey, org, grad_thresh,
                    show=False, write_path=None,
-                   step_h=2, step_v=5,
+                   step_h=10, step_v=10,
                    line_thickness=C.THRESHOLD_LINE_THICKNESS,
                    min_rec_evenness=C.THRESHOLD_REC_MIN_EVENNESS,
                    max_dent_ratio=C.THRESHOLD_REC_MAX_DENT_RATIO):
@@ -496,50 +496,51 @@ def nested_components_detection(grey, org, grad_thresh,
     for x in range(0, row, step_h):
         for y in range(0, column, step_v):
             if grey[x, y] == 255 and mask[x, y] == 0:
-                print("Yes")
+                #print("Yes")
                 # region = flood_fill_bfs(grey, x, y, mask)
 
                 # flood fill algorithm to get background (layout block)
                 mask_copy = mask.copy()
                 #ff = cv2.floodFill(grey, mask, (y, x), None, grad_thresh, grad_thresh, cv2.FLOODFILL_MASK_ONLY)
-                ff = cv2.floodFill(grey, mask, (y, x), None, 0, 0, cv2.FLOODFILL_MASK_ONLY)
-                print(ff[0])
+                ff = cv2.floodFill(grey, mask, (y, x), None, 0, 0, flags=8 | cv2.FLOODFILL_MASK_ONLY)
+                #print(ff[0])
                 # ignore small regions
-                if ff[0] < 500: continue
+                if ff[0] < 100: continue
                 mask_copy = mask - mask_copy
                 region = np.reshape(cv2.findNonZero(mask_copy[1:-1, 1:-1]), (-1, 2))
-                region = [(p[1], p[0]) for p in region]
+                region = [(p[1], p[0]) for p in region] #point: (row_index, column_index)
 
                 compo = Component(region, grey.shape)
                 # draw.draw_region(region, broad_all)
                 # if block.height < 40 and block.width < 40:
                 #     continue
-
+                
                 #这个15会影响/home/auto-test-4/wyx/UIED/data/output/screenshots_3/ip/1649098786.jpg里的嵌套组件出不出现
-                if compo.height < 20:
-                    print("compo.height < 15")
+                if compo.height < 10:
+                    #print("compo.height < 15")
                     continue
-
+                
                 # print(block.area / (row * column))
                 if compo.area / (row * column) > 0.9:
-                    print("compo.area / (row * column) > 0.9")
+                    #print("compo.area / (row * column) > 0.9")
                     continue
                 elif compo.area / (row * column) > 0.7:
-                    print("compo.area / (row * column) > 0.7")
+                    #print("compo.area / (row * column) > 0.7")
                     compo.redundant = True
 
                 # get the boundary of this region
                 # ignore lines
                 if compo.compo_is_line(line_thickness):
-                    print("ompo.compo_is_line(line_thickness)")
+                    #print("ompo.compo_is_line(line_thickness)")
                     continue
                 # ignore non-rectangle as blocks must be rectangular
-                if not compo.compo_is_rectangle(min_rec_evenness, max_dent_ratio):
-                    print("compo.compo_is_rectangle(min_rec_evenness, max_dent_ratio)")
+                #if not compo.compo_is_rectangle(min_rec_evenness, max_dent_ratio):
+                    #print("compo.compo_is_rectangle(min_rec_evenness, max_dent_ratio)")
                     #continue
                 # if block.height/row < min_block_height_ratio:
                 #     continue
-                print("No continue!")
+                #print("No continue!")
+                
                 compos.append(compo)
                 # draw.draw_region(region, broad)
     if show:

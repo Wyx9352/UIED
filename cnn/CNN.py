@@ -90,9 +90,9 @@ class CNN:
             X = self.preprocess_img(imgs[i])
             Y = self.class_map[np.argmax(self.model.predict(X))]
             compos[i].category = Y
-            print(Y)
+            #print(Y)
             if show:
-                print(Y)
+                #print(Y)
                 cv2.imshow('element', imgs[i])
                 cv2.waitKey()
 

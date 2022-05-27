@@ -51,8 +51,8 @@ if __name__ == '__main__':
                   'merge-contained-ele':True, 'merge-line-to-paragraph':False, 'remove-bar':True}
 
     # set input image path
-    input_path_img = '/home/auto-test-4/wyx/UIED/data/input/screenshots/IMG_0108.PNG'
-    output_root = 'data/output/screenshots'
+    input_path_img = '/home/auto-test-4/wyx/datasets/UIED_dataset/input/screenshots/IMG_0098.PNG'
+    output_root = '/home/auto-test-4/wyx/datasets/UIED_dataset/output/screenshots'
 
     resized_height = resize_height_by_longest_edge(input_path_img, resize_length=800)
     color_tips()
