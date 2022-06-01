@@ -21,8 +21,8 @@ def resize_height_by_longest_edge(img_path, resize_length=800):
 
 if __name__ == '__main__':
     # initialization
-    input_img_root = "/home/auto-test-4/wyx/datasets/UIED_dataset/input/screenshots_4"
-    output_root = "/home/auto-test-4/wyx/datasets/UIED_dataset/output/screenshots_4"
+    input_img_root = "/home/auto-test-4/wyx/datasets/UIED_dataset/input/screenshots"
+    output_root = "/home/auto-test-4/wyx/datasets/UIED_dataset/output/screenshots"
     #data = json.load(open('E:/Mulong/Datasets/rico/instances_test.json', 'r'))
 
     #input_imgs = [pjoin(input_img_root, img['file_name'].split('/')[-1]) for img in data['images']]

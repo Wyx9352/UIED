@@ -62,7 +62,8 @@ def reverse_binary(bin, show=False):
 
 def binarization(org, grad_min, show=False, write_path=None, wait_key=0):
     grey = cv2.cvtColor(org, cv2.COLOR_BGR2GRAY)
-    grad = gray_to_gradient(grey)        # get RoI with high gradient
+    #grad = gray_to_gradient(grey)        # get RoI with high gradient
+    grad = cv2.Canny(grey,30,65) #高阈值太高的话，浅色背景按钮无法被检测
     rec, binary = cv2.threshold(grad, grad_min, 255, cv2.THRESH_BINARY)    # enhance the RoI
     morph = cv2.morphologyEx(binary, cv2.MORPH_CLOSE, (3, 3))  # remove noises
     #morph = cv2.morphologyEx(binary, cv2.MORPH_CLOSE, (3, 3))  # remove noises
@@ -70,7 +71,7 @@ def binarization(org, grad_min, show=False, write_path=None, wait_key=0):
     #kernel = np.ones((3, 3), np.uint8)
     kernel = np.array([[0,0,0],[1,1,1],[0,0,0]])
     kernel = kernel.astype('uint8')
-    morph = cv2.dilate(morph,kernel,iterations=3) #横向膨胀 
+    morph = cv2.dilate(morph,kernel,iterations=4) #横向膨胀 
 
     kernel = np.array([[0,1,0],[0,1,0],[0,1,0]])
     kernel = kernel.astype('uint8')

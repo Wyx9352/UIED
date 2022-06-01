@@ -58,7 +58,7 @@ def merge_intersected_compos(compos):
         for compo_a in compos:
             merged = False
             for compo_b in temp_set:
-                if compo_a.compo_relation(compo_b) == 2:
+                if compo_a.compo_relation(compo_b) == 2: #相交
                     compo_b.compo_merge(compo_a)
                     merged = True
                     changed = True
@@ -238,7 +238,7 @@ def rm_line(binary,
                 line_gap = 0
             elif line_length > 0:
                 line_gap += 1
-        if line_length / width > 0.95:
+        if line_length / width > 0.9 and line[0]>0: #线像素足够多，几乎为1，肯定是线，分割
             return True
         return False
 
@@ -432,18 +432,23 @@ def component_detection(binary, min_obj_area,
                 mask_copy = mask.copy()
                 ff = cv2.floodFill(binary, mask, (j, i), None, 0, 0, flags=8 | cv2.FLOODFILL_MASK_ONLY)
                 #ff:->[retval, image, mask, rect]
-                #import pdb
+                import pdb
                 #pdb.set_trace()
                 if ff[0] < min_obj_area: continue
                 mask_copy = mask - mask_copy
+
                 region = np.reshape(cv2.findNonZero(mask_copy[1:-1, 1:-1]), (-1, 2))
                 region = [(p[1], p[0]) for p in region]
 
                 # filter out some compos
                 component = Component(region, binary.shape)
+                #pdb.set_trace()
+                cv2.imwrite('/home/auto-test-4/wyx/UIED/data/output/mask.jpg', mask*255)
                 # calculate the boundary of the connected area
                 # ignore small area
                 if component.width <= 3 or component.height <= 3:
+                    continue
+                if component.height >= 350: #框太高的不要，比键盘还高的
                     continue
                 # check if it is line by checking the length of edges
                 # if component.compo_is_line(line_thickness):
@@ -454,6 +459,7 @@ def component_detection(binary, min_obj_area,
                     draw.draw_boundary([component], binary.shape, show=True)
 
                 compos_all.append(component)
+                #print("+1")
 
                 if rec_detect:
                     # rectangle check
@@ -477,7 +483,7 @@ def component_detection(binary, min_obj_area,
 
 def nested_components_detection(grey, org, grad_thresh,
                    show=False, write_path=None,
-                   step_h=10, step_v=10,
+                   step_h=5, step_v=10,
                    line_thickness=C.THRESHOLD_LINE_THICKNESS,
                    min_rec_evenness=C.THRESHOLD_REC_MIN_EVENNESS,
                    max_dent_ratio=C.THRESHOLD_REC_MAX_DENT_RATIO):

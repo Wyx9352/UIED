@@ -22,7 +22,7 @@ def nesting_inspection(org, grey, compos, grad_min, ffl_block):
     nesting_compos = []
     for i, compo in enumerate(compos):
         if compo.height > 10:
-        #if compo.height > 10 and i==13:
+        #if compo.height > 10 and i==6:
             replace = False
             clip_org = compo.compo_clipping(org)
             #cv2.imwrite('/home/auto-test-4/wyx/datasets/UIED_dataset/output/grey.jpg', org)
@@ -30,6 +30,7 @@ def nesting_inspection(org, grey, compos, grad_min, ffl_block):
             #import pdb
             #pdb.set_trace()
             clip_org_binary = pre.nest_binarization(clip_org, grad_min)
+            #print(clip_org_binary)
             #cv2.imwrite('/home/auto-test-4/wyx/datasets/UIED_dataset/output/clip_org_binary.jpg', clip_org_binary)
             n_compos = det.nested_components_detection(clip_org_binary, org, grad_thresh=ffl_block, show=False)
             #print(n_compos)
@@ -60,7 +61,7 @@ def compo_detection(input_img_path, output_root, uied_params,
     cv2.imwrite('data/output/binary_with_line.jpg', binary)
 
     # *** Step 2 *** element detection
-    #det.rm_line(binary, show=show, wait_key=wai_key)
+    det.rm_line(binary, show=show, wait_key=wai_key)
     cv2.imwrite('data/output/binary_no_line.jpg', binary)
 
     uicompos = det.component_detection(binary, min_obj_area=int(uied_params['min-ele-area']))
@@ -68,8 +69,11 @@ def compo_detection(input_img_path, output_root, uied_params,
     #pdb.set_trace()
 
     # *** Step 3 *** results refinement
+    #print(len(uicompos))
     uicompos = det.compo_filter(uicompos, min_area=int(uied_params['min-ele-area']), img_shape=binary.shape)
+    #print(len(uicompos))
     uicompos = det.merge_intersected_compos(uicompos)
+    #print(len(uicompos))
     det.compo_block_recognition(binary, uicompos)
     if uied_params['merge-contained-ele']:
         uicompos = det.rm_contained_compos_not_in_block(uicompos)
